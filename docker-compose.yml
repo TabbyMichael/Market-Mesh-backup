@@ -1,0 +1,119 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: marketmesh
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  gateway:
+    build:
+      context: ./services/gateway
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      - USERS_SERVICE_URL=http://users:4001
+      - PRODUCTS_SERVICE_URL=http://products:4002
+      - ORDERS_SERVICE_URL=http://orders:4003
+      - PAYMENTS_SERVICE_URL=http://payments:4004
+      - NOTIFICATIONS_SERVICE_URL=http://notifications:4005
+      - UPLOADS_SERVICE_URL=http://uploads:4006
+    depends_on:
+      - users
+      - products
+      - orders
+      - payments
+      - notifications
+      - uploads
+
+  users:
+    build:
+      context: ./services/users
+      dockerfile: Dockerfile
+    ports:
+      - "4001:4001"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/marketmesh
+      - JWT_SECRET=your-super-secret-jwt-key
+    depends_on:
+      - postgres
+
+  products:
+    build:
+      context: ./services/products
+      dockerfile: Dockerfile
+    ports:
+      - "4002:4002"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/marketmesh
+    depends_on:
+      - postgres
+
+  orders:
+    build:
+      context: ./services/orders
+      dockerfile: Dockerfile
+    ports:
+      - "4003:4003"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/marketmesh
+    depends_on:
+      - postgres
+
+  payments:
+    build:
+      context: ./services/payments
+      dockerfile: Dockerfile
+    ports:
+      - "4004:4004"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/marketmesh
+      - STRIPE_SECRET_KEY=sk_test_...
+      - STRIPE_PUBLISHABLE_KEY=pk_test_...
+    depends_on:
+      - postgres
+
+  notifications:
+    build:
+      context: ./services/notifications
+      dockerfile: Dockerfile
+    ports:
+      - "4005:4005"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/marketmesh
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_USER=your-email@gmail.com
+      - SMTP_PASS=your-app-password
+      - FROM_EMAIL=noreply@marketmesh.com
+    depends_on:
+      - postgres
+
+  uploads:
+    build:
+      context: ./services/uploads
+      dockerfile: Dockerfile
+    ports:
+      - "4006:4006"
+    environment:
+      - AWS_ACCESS_KEY_ID=your-access-key
+      - AWS_SECRET_ACCESS_KEY=your-secret-key
+      - AWS_REGION=us-east-1
+      - S3_BUCKET_NAME=marketmesh-uploads
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:

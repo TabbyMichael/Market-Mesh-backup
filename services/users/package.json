@@ -1,0 +1,28 @@
+{
+  "name": "@marketmesh/users",
+  "version": "1.0.0",
+  "description": "Users service for MarketMesh",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "nodemon src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "lint": "eslint src/**/*.ts",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.10.0",
+    "graphql": "^16.8.1",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.5",
+    "nodemon": "^3.0.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.0"
+  }
+}

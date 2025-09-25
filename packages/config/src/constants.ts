@@ -1,0 +1,25 @@
+export const ORDER_STATUS = {
+  PENDING_PAYMENT: 'PENDING_PAYMENT',
+  PAID: 'PAID',
+  FULFILLED: 'FULFILLED',
+  CANCELLED: 'CANCELLED',
+} as const;
+
+export const USER_ROLES = {
+  BUYER: 'BUYER',
+  SELLER: 'SELLER',
+  ADMIN: 'ADMIN',
+} as const;
+
+export const NOTIFICATION_TYPES = {
+  ORDER_CONFIRMATION: 'ORDER_CONFIRMATION',
+  ORDER_SHIPPED: 'ORDER_SHIPPED',
+  PAYMENT_RECEIVED: 'PAYMENT_RECEIVED',
+  NEW_MESSAGE: 'NEW_MESSAGE',
+} as const;
+
+export const CURRENCIES = {
+  USD: 'USD',
+  EUR: 'EUR',
+  GBP: 'GBP',
+} as const;
